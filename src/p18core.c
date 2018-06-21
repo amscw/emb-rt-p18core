@@ -18,18 +18,27 @@ int main(void) {
 
 	// create parameters
 	dummyParams_t dummyParams = { {sizeof dummyParams} };
-	dummyParams.base.flags.bits.bIsLoop = 1;
 
 
-	// schedule task 1
-	dummyParams.p1 = 5;
-	dummyParams.p2 = 7;
+
+	// one-shot task
+	dummyParams.p1 = 1;
+	dummyParams.p2 = 2;
+	dummyParams.base.flags.bits.bIsLoop = 0;
+	Schedule(dummyTask, (baseParam_t*)&dummyParams, 0);
+
+	// delay task
+	dummyParams.p1 = 3;
+	dummyParams.p2 = 4;
+	dummyParams.base.flags.bits.bIsLoop = 0;
 	Schedule(dummyTask, (baseParam_t*)&dummyParams, 1000);
 
-	// schedule task 2
-	dummyParams.p1 = 8;
-	dummyParams.p2 = 9;
-	Schedule(dummyTask, (baseParam_t*)&dummyParams, 200);
+	// repeat task
+	dummyParams.p1 = 5;
+	dummyParams.p2 = 6;
+	dummyParams.base.flags.bits.bIsLoop = 1;
+	Schedule(dummyTask, (baseParam_t*)&dummyParams, 2000);
+
 
 	while(1)
 	{

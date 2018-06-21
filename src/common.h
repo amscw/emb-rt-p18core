@@ -31,8 +31,13 @@ typedef enum err_ {
 // macro
 //-----------------------------------------------------------------------------
 #define __DBG_MSG__
-#define TRACE(fmt,args...) printf("%s(%s)-"fmt"\n", __FILE__, __FUNCTION__, ##args)	// whatthefuck messages
-
-
+#if defined(__MINGW32__)
+	#define TRACE(fmt,args...) {\
+		printf("%s(%s)-"fmt"\n", __FILE__, __FUNCTION__, ##args);\
+		fflush(stdout);\
+	}
+#else
+	#define TRACE(fmt,args...) printf("%s(%s)-"fmt"\n", __FILE__, __FUNCTION__, ##args)
+#endif
 
 #endif /* COMMON_H_ */

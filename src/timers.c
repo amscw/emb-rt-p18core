@@ -15,7 +15,7 @@
 #define TASK_BUF_SIZE		32
 
 #if defined(__DBG_MSG__)
-	#define TASK_SET_STATE(t,s) { TRACE("task switched to: %d",s); t.state = s; }
+	#define TASK_SET_STATE(t,s) { TRACE("task \"%c\" switched to: %s", t.idx, strState[s]); t.state = s; }
 #else
 	#define TASK_SET_STATE(t,s) { t.state = s; }
 #endif
@@ -28,6 +28,7 @@
 //-----------------------------------------------------------------------------
 typedef struct task_
 {
+	char idx;
 	callback_t fn;
 	paramItem_t params[TASK_BUF_SIZE];
 	volatile enum { IDLE = 0, SCHEDULED, EXEC } state;
@@ -36,6 +37,11 @@ typedef struct task_
 //-----------------------------------------------------------------------------
 // variables
 //-----------------------------------------------------------------------------
+static const char *strState[] = {
+		"IDLE", "SCHEDULED", "EXEC",
+};
+
+
 static struct timer_
 {
 	struct timer_ *pNext, *pPrev;
@@ -61,7 +67,6 @@ static UINT_PTR timerID = 0;
 //-----------------------------------------------------------------------------
 // functions
 //-----------------------------------------------------------------------------
-
 void ShowTaskList(void)
 {
 
@@ -139,6 +144,12 @@ err_t Schedule(callback_t fn, baseParam_t *pBP, uint16_t timeToExec)
 
 inline void Scheduler(void)
 {
+#if defined(__MINGW32__)
+	MSG msg;
+	GetMessage(&msg, NULL, 0, 0);
+	DispatchMessage(&msg);
+#endif
+
 	struct timer_ *pT;
 	baseParam_t *pBP;
 
@@ -196,6 +207,9 @@ VOID CALLBACK t0Int(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
 
 err_t SchedulerInit(void)
 {
+	for (int i = 0; i < TIMERS_COUNT; i++)
+		timers[i].task.idx = i + 'A';
+
 #if defined(__MINGW32__)
 	timerID = SetTimer(NULL, 0, TIMER_1TICK_TIME, t0Int);
 	if (timerID == 0)
