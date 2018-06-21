@@ -174,6 +174,8 @@ inline void Scheduler(void)
 					pT->pNext->pPrev = pT->pPrev;	// connect next timer with previous, if exist
 				if (pT->pPrev != NULL)
 					pT->pPrev->pNext = pT->pNext;	// connect previous timer with next, if exist
+				else
+					pFirst = pT->pNext;
 				TASK_SET_STATE(pT->task, IDLE);
 			}
 		}
@@ -216,7 +218,7 @@ err_t SchedulerInit(void)
 	if (timerID == 0)
 	{
 		TRACE("function fails to create a timer");
-		return ERR_TRUE;
+		return ERR_CONFIGURE;
 	}
 	return ERR_OK;
 #endif

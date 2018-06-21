@@ -24,6 +24,16 @@ void dummyTask(paramItem_t* p)
 #endif
 	// ...
 	// set task options here, for example change priority
+
+	if (pDummyParam->p1 == 3 &&  pDummyParam->p2 == 4)
+	{
+		// schedule delay task from here
+		dummyParams_t params = { {sizeof params } };
+		params.p1 = 7;
+		params.p2 = 8;
+		params.base.flags.bits.bIsLoop = 0;
+		Schedule(dummyTask, (baseParam_t*)&params, 1000);
+	}
 }
 
 
