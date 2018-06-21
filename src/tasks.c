@@ -23,9 +23,7 @@ void dummyTask(paramItem_t* p)
 	TRACE("Hello! It's dummy task, P1=%d, P2=%d", pDummyParam->p1, pDummyParam->p2);
 #endif
 	// ...
-	// check if need loop
-	pDummyParam->base.flags.bits.bIsLoop = 0;
-	// set other options here, for example change priority
+	// set task options here, for example change priority
 }
 
 

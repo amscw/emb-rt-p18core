@@ -167,6 +167,7 @@ inline void Scheduler(void)
 				// restart timer
 				pT->timeBase.nTicksCurrent = 0;
 				pT->timeBase.bON = 1;
+				TASK_SET_STATE(pT->task, SCHEDULED);
 			} else {
 				// free timer
 				if (pT->pNext != NULL)
